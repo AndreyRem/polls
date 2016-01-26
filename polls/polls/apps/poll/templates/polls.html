@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+
+{% block polls %}
+    {% for poll in poll_list %}
+        <h3>
+            <a href="{% url 'polls:poll' poll.id %}">{{ poll.title}}</a>
+        </h3>
+        <h4>Вес опроса: {{ poll.weight }}</h4>
+{#        <h4>Вес создателя: {{ poll.owner.weight }}</h4>#}
+        <h4>Прошло опрос: {{ poll.successful_completion_count }}</h4>
+        <h4>Не осилило опрос: {{ poll.not_successful_completion_count }}</h4>
+        <h4>Дата публикации: {{ poll.created_at }}.</h4>
+        <h4>Создатель опроса: <a href="{% url 'polls:user_polls' poll.owner.id %}">{{ poll.owner }}</a>.</h4>
+    {% endfor %}
+{% endblock polls %}

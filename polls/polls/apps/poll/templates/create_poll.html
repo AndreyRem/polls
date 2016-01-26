@@ -1,0 +1,64 @@
+{% extends "main.html" %}
+{% block scripts %}
+    <script>
+        function addQuestion(){
+            var title = prompt('Введите вопрос'),
+                questions_number = document.getElementsByClassName('question').length,
+                container = document.getElementsByClassName('questions')[0],
+                question_container = document.createElement('div'),
+                answers_container = document.createElement('div'),
+                question_title_input = document.createElement('input'),
+                add_answer_button = document.createElement('button');
+
+            question_container.className = 'question';
+            question_container.id = 'question_container_' + questions_number;
+
+            question_title_input.name = 'question_'+questions_number;
+            question_title_input.value = title;
+
+            answers_container.className = 'answers';
+
+            add_answer_button.setAttribute('onclick', 'addAnswer('+questions_number+')');
+            add_answer_button.innerHTML = 'Добавить ответ к этому вопросу';
+            add_answer_button.type = "button";
+
+            question_container.appendChild(question_title_input);
+            question_container.appendChild(answers_container);
+            question_container.appendChild(add_answer_button);
+
+            container.appendChild(question_container);
+        }
+
+        function addAnswer(question_number){
+            var title = prompt('Введите вариант ответа'),
+                question_container = document.getElementById('question_container_'+question_number),
+                answers_container = question_container.getElementsByClassName('answers')[0],
+                answer_hidden_input = document.createElement('input'),
+                answer_label = document.createElement('label');
+
+
+            answer_hidden_input.type = 'checkbox';
+            answer_hidden_input.value = title;
+            answer_hidden_input.checked = true;
+            answer_hidden_input.hidden = true;
+            answer_hidden_input.name = 'answer_for_question_'+question_number;
+
+            answer_label.innerHTML = title;
+
+            answers_container.appendChild(answer_hidden_input);
+            answers_container.appendChild(answer_label);
+        }
+    </script>
+{% endblock scripts %}
+
+{% block create_poll %}
+    <form action="{% url 'polls:add_poll' %}" method="post">
+        {% csrf_token %}
+        <label class="col-sm-3">Название опроса</label> <input class="col-sm-9" name="title">
+        <label  class="col-sm-3">Url для опроса</label><input  class="col-sm-9" name="slug">
+        <label  class="col-sm-3">Вес опроса</label><input  class="col-sm-9" name="weight">
+        <div class="questions"></div>
+        <button type="button" onclick="addQuestion()">Добавить вопрос</button>
+        <button type="submit">Создать опрос</button>
+    </form>
+{% endblock create_poll %}

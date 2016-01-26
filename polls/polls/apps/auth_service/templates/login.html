@@ -1,0 +1,11 @@
+{% extends 'main.html' %}
+
+{% block login %}
+    <form class="form-signin" action="{% url 'auth_service:login' %}" method="post">
+        {% csrf_token %}
+        <h2 class="form-signin-heading text-center">Войдите в систему</h2>
+        {{ form }}
+        <button type="submit">Войти</button>
+        <a href="{% url 'auth_service:register' %}">Регистрация</a>
+    </form>
+{% endblock login %}

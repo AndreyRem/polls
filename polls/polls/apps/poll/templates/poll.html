@@ -1,0 +1,44 @@
+{% extends "main.html" %}
+
+{% block scripts %}
+<script>
+    $(function() {
+        $('[name=answer]').on('change', function(e){
+            $.ajax({
+                url:"{% url 'polls:set_user_answer' %}",
+                type:"POST",
+                data:{
+                    'csrfmiddlewaretoken': '{{csrf_token}}',
+                    'answer_id': $(e.target).val(),
+                    'checked': $(e.target)[0].checked
+                },
+                dataType:"json"
+            })
+        })
+    });
+</script>
+{% endblock scripts %}
+
+{% block poll %}
+    <form method="post" action="{% url 'polls:add_completion_of_poll' poll.id %}">
+        {% csrf_token %}
+        <h1>{{ poll.title }}</h1>
+        {% for question in poll.question_set.all %}
+            <h3>{{ question.title }}</h3>
+            {% for answer in question.answer_set.all %}
+                {% if user.is_authenticated %}
+                    {% if user.id == poll.owner.id %}
+                        {{ answer.percentage_of_elections|floatformat:1 }}
+                    {% else %}
+                        <input type="checkbox" name="answer"
+                           id="answer_{{ answer.id }}" value="{{ answer.id }}" />
+                    {% endif %}
+                {% endif %}
+                <label for="answer_{{ answer.id }}">{{ answer.title }}</label><br />
+            {% endfor %}
+        {% endfor %}
+        {% if user.is_authenticated %}
+            <input class="btn btn-success" type="submit" value="Завершить прохождение опроса">
+        {% endif %}
+    </form>
+{% endblock poll %}

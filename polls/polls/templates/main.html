@@ -1,0 +1,43 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Polls</title>
+    <link rel="stylesheet" type="text/css" href="{%static "css/bootstrap.min.css" %}">
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{% url 'index' %}">Polls</a>
+            </div>
+            <ul class="nav navbar-nav">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'polls:new_poll' %}">New poll</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'auth_service:logout' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'polls:user_polls' user.id %}">{{ user }}</a></li>
+                {% else %}
+                    <li><a href="{% url 'auth_service:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        {% block login %}{% endblock login %}
+        {% block polls %}{% endblock polls %}
+        {% block poll %}{% endblock poll %}
+        {% block system_statistics %}{% endblock system_statistics %}
+
+        {% block create_poll %}{% endblock create_poll %}
+        <script src="{% static 'js/jquery-2.2.0.min.js' %}"></script>
+        {% block scripts %}{% endblock scripts %}
+    </div>
+</body>
+</html>

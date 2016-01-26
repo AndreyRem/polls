@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+{% load divide %}
+
+{% block system_statistics %}
+    <h1>Статистика по системе</h1>
+    <h3>Всего пользователей: {{ users_count }}</h3>
+    <h3>Всего опросов: {{ polls_count }}</h3>
+    <h3>Всего ответов: {{ successful_completion_count_sum }}</h3>
+    <h3>В среднем опросов приходится на пользователя: {{ polls_count|divide:users_count }}</h3>
+    <h3>В среднем ответов приходится на пользователя: {{ successful_completion_count_sum|divide:users_count }}</h3>
+    <h3>В среднем ответов приходиться на опрос: {{ successful_completion_count_sum|divide:users_count }}</h3>
+{% endblock system_statistics %}
